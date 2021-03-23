@@ -8,7 +8,7 @@ import chisel3.util.random.LFSR
 import chisel3.experimental._
 
 
-class invertedJtagIO extends Bundle {
+class InvertedJtagIO extends Bundle {
   // TRST (4.6) is optional and not currently implemented.
   val TCK = Output(Bool())
   val TMS = Output(Bool())
@@ -16,13 +16,13 @@ class invertedJtagIO extends Bundle {
   val TDO = Input(new Bool())
 }
 
-class invertedJtagIOPlus extends invertedJtagIO {
+class InvertedJtagIOPlus extends InvertedJtagIO {
   val finished = Output(Bool())
 }
 
-class jtagFuzzer(irLength: Int, beatBytes: Int, numOfTransfers: Int) extends Module {
+class JtagFuzzer(irLength: Int, beatBytes: Int, numOfTransfers: Int) extends Module {
 
-  val io = IO(new invertedJtagIOPlus)
+  val io = IO(new InvertedJtagIOPlus)
   
   object State extends ChiselEnum {
     val sIdle, sTCK, sTMS, sTCKandTMS, sNone, sDataTCK, sDataTMS, sDataTCKandTMS, sDataNone  = Value

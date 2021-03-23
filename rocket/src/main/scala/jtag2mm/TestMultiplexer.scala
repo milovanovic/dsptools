@@ -41,7 +41,7 @@ class TLMultiplexer()(implicit p: Parameters)
     extends TestMultiplexer[TLClientPortParameters, TLManagerPortParameters, TLEdgeOut, TLEdgeIn, TLBundle]()
     with TLBasicBlock
     
-class jtag2TLMultiplexer(
+class Jtag2TLMultiplexer(
   irLength:           Int,
   initialInstruction: BigInt,
   beatBytes:          Int,
@@ -105,8 +105,8 @@ class jtag2TLMultiplexer(
     io2 <> multiplexerModule.outStream
     io2
   }
-  def makeIO2(): topModuleIO = {
-    val io2: topModuleIO = IO(jtagModule.ioJTAG.cloneType)
+  def makeIO2(): TopModuleIO = {
+    val io2: TopModuleIO = IO(jtagModule.ioJTAG.cloneType)
     io2.suggestName("ioJTAG")
     io2 <> jtagModule.ioJTAG
     io2
@@ -122,7 +122,7 @@ class AXI4Multiplexer()(implicit p: Parameters)
     extends TestMultiplexer[AXI4MasterPortParameters, AXI4SlavePortParameters, AXI4EdgeParameters, AXI4EdgeParameters, AXI4Bundle]
     with AXI4BasicBlock
     
-class jtag2AXI4Multiplexer(
+class Jtag2AXI4Multiplexer(
   irLength:           Int,
   initialInstruction: BigInt,
   beatBytes:          Int,
@@ -160,8 +160,8 @@ class jtag2AXI4Multiplexer(
     io2 <> multiplexerModule.outStream
     io2
   }
-  def makeIO2(): topModuleIO = {
-    val io2: topModuleIO = IO(jtagModule.ioJTAG.cloneType)
+  def makeIO2(): TopModuleIO = {
+    val io2: TopModuleIO = IO(jtagModule.ioJTAG.cloneType)
     io2.suggestName("ioJTAG")
     io2 <> jtagModule.ioJTAG
     io2
@@ -183,7 +183,7 @@ object JTAGToTLMultiplexerApp extends App {
 
   implicit val p: Parameters = Parameters.empty
   val appModule = LazyModule(
-    new jtag2TLMultiplexer(irLength, initialInstruction, beatBytes, addresses, maxBurstNum)
+    new Jtag2TLMultiplexer(irLength, initialInstruction, beatBytes, addresses, maxBurstNum)
   )
 
   chisel3.Driver.execute(args, () => appModule.module)
@@ -199,7 +199,7 @@ object JTAGToAXI4MultiplexerApp extends App {
 
   implicit val p: Parameters = Parameters.empty
   val appModule = LazyModule(
-    new jtag2AXI4Multiplexer(irLength, initialInstruction, beatBytes, addresses, maxBurstNum)
+    new Jtag2AXI4Multiplexer(irLength, initialInstruction, beatBytes, addresses, maxBurstNum)
   )
 
   chisel3.Driver.execute(args, () => appModule.module)

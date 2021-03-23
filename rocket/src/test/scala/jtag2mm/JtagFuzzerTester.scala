@@ -11,7 +11,7 @@ import chisel3.iotesters.PeekPokeTester
 import org.scalatest.{FlatSpec, Matchers}
 import dsptools.DspTester
 
-class jtagFuzzerTester(dut: jtagFuzzer) extends DspTester(dut) {
+class JtagFuzzerTester(dut: JtagFuzzer) extends DspTester(dut) {
 
   step(10)
   step(5)
@@ -19,10 +19,10 @@ class jtagFuzzerTester(dut: jtagFuzzer) extends DspTester(dut) {
 }
 
 
-class jtagFuzzerSpec extends FlatSpec with Matchers {
+class JtagFuzzerSpec extends FlatSpec with Matchers {
 
-  def dut(irLength: Int, beatBytes: Int, numOfTransfers: Int): () => jtagFuzzer = () => {
-    new jtagFuzzer(irLength, beatBytes, numOfTransfers)
+  def dut(irLength: Int, beatBytes: Int, numOfTransfers: Int): () => JtagFuzzer = () => {
+    new JtagFuzzer(irLength, beatBytes, numOfTransfers)
   }
 
   val beatBytes = 4
@@ -33,7 +33,7 @@ class jtagFuzzerSpec extends FlatSpec with Matchers {
 
     //chisel3.iotesters.Driver.execute(Array("-tiwv", "-tbn", "verilator", "-tivsuv"), () => dut) { c =>
     chisel3.iotesters.Driver.execute(Array("-tbn", "verilator"), dut(irLength, beatBytes, numOfTransfers)) { c =>
-      new jtagFuzzerTester(c)
+      new JtagFuzzerTester(c)
     } should be(true)
   }
 }

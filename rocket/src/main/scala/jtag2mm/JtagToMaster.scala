@@ -22,7 +22,7 @@ class JtagToMasterControllerIO(irLength: Int, beatBytes: Int) extends JtagBlockI
   val receivedEnd = Output(Bool())
 }
 
-class topModuleIO extends Bundle {
+class TopModuleIO extends Bundle {
   val jtag = new JtagIO
   val asyncReset = Input(Bool())
 }
@@ -137,7 +137,7 @@ class JTAGToMasterTL[D, U, E, O, B <: Data](irLength: Int, initialInstruction: B
     )
   )
 
-  lazy val io = Wire(new topModuleIO)
+  lazy val io = Wire(new TopModuleIO)
 
   lazy val module = new LazyModuleImp(this) {
 
@@ -461,8 +461,8 @@ class TLJTAGToMasterBlock(
     }
   }
 
-  def makeIO2(): topModuleIO = {
-    val io2: topModuleIO = IO(io.cloneType)
+  def makeIO2(): TopModuleIO = {
+    val io2: TopModuleIO = IO(io.cloneType)
     io2.suggestName("ioJTAG")
     io2 <> io
     io2
@@ -502,7 +502,7 @@ class JTAGToMasterAXI4(irLength: Int, initialInstruction: BigInt, beatBytes: Int
 
   val node = Some(AXI4MasterNode(Seq(AXI4MasterPortParameters(Seq(AXI4MasterParameters("ioAXI4"))))))
 
-  lazy val io = Wire(new topModuleIO)
+  lazy val io = Wire(new TopModuleIO)
 
   lazy val module = new LazyModuleImp(this) {
 
@@ -877,8 +877,8 @@ class AXI4JTAGToMasterBlock(
     extends JTAGToMasterAXI4(irLength, initialInstruction, beatBytes, addresses, burstMaxNum) {
   require(burstMaxNum <= 128)
 
-  def makeIO2(): topModuleIO = {
-    val io2: topModuleIO = IO(io.cloneType)
+  def makeIO2(): TopModuleIO = {
+    val io2: TopModuleIO = IO(io.cloneType)
     io2.suggestName("ioJTAG")
     io2 <> io
     io2

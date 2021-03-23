@@ -2,12 +2,12 @@ JTAG To Memory Master (JTAG2MM) Chisel Generator
 ========================================================
 
 ## Overview
-This repository contains a generator of JTAG to memory-mapped bus master modules, written in [Chisel](http://www.chisel-lang.org) hardware design language. Generated modules can initiate AXI4/TileLink(TL) transactions and drive AXI4/TL memory mapped slave(s) through an interconnect bus.
+In this document, a generator of JTAG to memory-mapped bus master modules, written in [Chisel](http://www.chisel-lang.org) hardware design language, is described. Generated modules can initiate AXI4/TileLink(TL) transactions and drive AXI4/TL memory mapped slave(s) through an interconnect bus.
 
 ### JTAG To Memory Master
 JTAG To Memory Master block can be divided into two subparts: JTAG controller and AXI4/TL controller. Its simplified block diagram with input and output interfaces is shown below.
 
-![JTAG To Memory Master block diagram](./doc/images/jtag2mm.png)
+![JTAG To Memory Master block diagram](./images/jtag2mm.svg)
 
 ### JTAG Controller
 
@@ -21,9 +21,9 @@ The main task of the JTAG controller is to collect signals from JTAG input seria
 
 JTAG finite state machine (FSM) is a standard JTAG FSM and it is used to ensure that the JTAG controller is working properly. Through the change of states of this FSM, it is possible to acquire instruction and data values from the JTAG serial input interface. `TCK` signal is used as a clock signal, state changing happens thanks to `TMS` signal and `TDI` signal is stored as data. JTAG FSM state changing diagram is shown below.
 
-![JTAG FSM state changing diagram](./doc/images/jtag_fsm.png)
+![JTAG FSM state changing diagram](./images/jtag_fsm.svg)
 
-JTAG controller is decsribed inside the `src/main/scala/jtagToMaster.scala` scala file. JTAG FSM, JTAG IO bundles and some of the other subparts and submodules are modified versions that are taken from the repository: [chisel-jtag](https://github.com/ucb-art/chisel-jtag).
+JTAG controller is decsribed inside the `rocket/src/main/scala/jtag2mm/JtagToMaster.scala` scala file. JTAG FSM, JTAG IO bundles and some of the other subparts and submodules are modified versions that are taken from the repository: [chisel-jtag](https://github.com/ucb-art/chisel-jtag).
 
 ### AXI4/TL Controller
  
@@ -37,11 +37,11 @@ AXI4/TL controller is used to initiate transactions and drive signals through an
 * `sSetReadyR` - state in which ready signal is set on R channel and data is read from the same channel. Stays in this state until R channel valid signal is not active or until a counter that ensures that FSM isn't stuck in this state counts out
 * `sDataForward` - state in which read data is forwarded to the JTAG controller, along with active validIn signal. Stays in this state until receivedIn signal is not active
 
-![AXI4 FSM state changing diagram](./doc/images/axi4_fsm.png)
+![AXI4 FSM state changing diagram](./images/axi4_fsm.svg)
 
 Same FSM could be applied for AXI4 burst transfers. Only difference is that after the completed single data transfer, FSM enters `sIdle` state only if the burst transfers counter has counted out. Otherwise, FSM enters `sSetDataAndAddress`/`sSetReadAddress` state to perform another transfer.
 
-TileLink FSM has different protocol signals involved, but works on the same principles as AXI4 FSM. AXI4 and TL controllers, as well as the appropriate FSM, are decsribed inside the `src/main/scala/jtagToMaster.scala` scala file.
+TileLink FSM has different protocol signals involved, but works on the same principles as AXI4 FSM. AXI4 and TL controllers, as well as the appropriate FSM, are decsribed inside the `rocket/src/main/scala/jtag2mm/JtagToMaster.scala` scala file.
 
 ### User manual
 
@@ -61,4 +61,11 @@ Before the write instruction, both address acquire and data acquire instructions
 
 ## Tests
 
-Several test examples and other additional information about the JTAG2MM generator can be found in the repository: [JTAG2MM](https://github.com/milovanovic/jtag2mm).
+Several tests were used to verify the correctness of the module. Some of them are defined inside the `rocket/src/test/scala/jtag2mm` directory. The rest can be found in the repository: [JTAG2MM](https://github.com/milovanovic/jtag2mm). In order to verify the module, a simple streaming multiplexer module is defined for both TileLink and AXI4 interfaces. Moreover, JTAG Fuzzer module that initiate arbitrary number of TL/AXI4 write transactions when connected to JTAG2MM module is defined. These transactions' data and addresses are pseudo-random. JTAG Fuzzer module can be of great value for additional testing of JTAG2MM modules.
+
+Following tests are defined in this repository:
+* `Jtag2AXI4MultiplexerTester.scala` - test used to verify the AXI4 variant of the JTAG2MM module working with AXI4Multiplexer module with memory mapped control registers connected to the AXI4 bus.
+* `Jtag2TLMultiplexerTester.scala` - test used to verify the TL variant of the JTAG2MM module working with TLMultiplexer module with memory mapped control registers connected to the TL bus.
+* `JtagFuzzerTester.scala` - test used to verify the correctness of the output signals of the JTAG Fuzzer module.
+
+
