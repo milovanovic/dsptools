@@ -38,12 +38,12 @@ class Jtag2AXI4MultiplexerTester(dut: Jtag2AXI4Multiplexer) extends DspTester(du
   def jtagSend(
     data:                BigInt,
     dataLength:          Int,
-    data_notInstruction: Boolean = true,
-    state_reset_notIdle: Boolean = true,
+    dataNotInstruction: Boolean = true,
+    stateResetNotIdle: Boolean = true,
     stepSize:            Int = 1
   ) {
 
-    if (state_reset_notIdle) {
+    if (stateResetNotIdle) {
       poke(dut.ioJTAG.jtag.TCK, 0)
       poke(dut.ioJTAG.jtag.TMS, 0)
       step(stepSize)
@@ -57,7 +57,7 @@ class Jtag2AXI4MultiplexerTester(dut: Jtag2AXI4Multiplexer) extends DspTester(du
     poke(dut.ioJTAG.jtag.TCK, 1)
     step(stepSize)
 
-    if (!data_notInstruction) {
+    if (!dataNotInstruction) {
       poke(dut.ioJTAG.jtag.TCK, 0)
       poke(dut.ioJTAG.jtag.TMS, 1)
       step(stepSize)
