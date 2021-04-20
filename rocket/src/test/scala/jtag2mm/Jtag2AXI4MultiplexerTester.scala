@@ -5,7 +5,7 @@ package freechips.rocketchip.jtag2mm
 import chisel3._
 import chisel3.util._
 import chisel3.experimental._
-import chisel3.experimental.{withClockAndReset}
+import chisel3.{withClockAndReset}
 
 import dsptools._
 import dsptools.numbers._
@@ -19,7 +19,8 @@ import freechips.rocketchip.regmapper._
 
 import chisel3.iotesters.Driver
 import chisel3.iotesters.PeekPokeTester
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 //class Jtag2AXI4MultiplexerTester(dut: Jtag2AXI4Multiplexer) extends PeekPokeTester(dut.module) {
 class Jtag2AXI4MultiplexerTester(dut: Jtag2AXI4Multiplexer) extends DspTester(dut.module) {
@@ -235,7 +236,7 @@ class Jtag2AXI4MultiplexerTester(dut: Jtag2AXI4Multiplexer) extends DspTester(du
   step(300)
 }
 
-class Jtag2AXI4MultiplexerSpec extends FlatSpec with Matchers {
+class Jtag2AXI4MultiplexerSpec extends AnyFlatSpec with Matchers {
   implicit val p: Parameters = Parameters.empty
 
   val irLength = 4
