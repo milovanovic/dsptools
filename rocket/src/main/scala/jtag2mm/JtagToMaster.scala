@@ -165,7 +165,7 @@ class JTAGToMasterTL[D, U, E, O, B <: Data](irLength: Int, initialInstruction: B
     currentInstruction := controller.io.output.instruction
 
     val dataValue = RegInit(UInt((beatBytes * 8).W), 0.U)
-    val addressValue = RegInit(UInt((beatBytes * 4).W), 0.U)
+    val addressValue = RegInit(UInt((beatBytes * 8).W), 0.U)
 
     val burstTotalNumber = RegInit(UInt(8.W), 0.U)
     val burstCurrentNumber = RegInit(UInt(8.W), 0.U)
@@ -176,7 +176,7 @@ class JTAGToMasterTL[D, U, E, O, B <: Data](irLength: Int, initialInstruction: B
     }
 
     when(currentInstruction === "b0010".U) {
-      addressValue := controller.io.dataOut >> (beatBytes * 4)
+      addressValue := controller.io.dataOut // >> (beatBytes * 4)
     }
 
     when(currentInstruction === "b1000".U) {
@@ -530,7 +530,7 @@ class JTAGToMasterAXI4(irLength: Int, initialInstruction: BigInt, beatBytes: Int
     currentInstruction := controller.io.output.instruction
 
     val dataValue = RegInit(UInt((beatBytes * 8).W), 0.U)
-    val addressValue = RegInit(UInt((beatBytes * 4).W), 0.U)
+    val addressValue = RegInit(UInt((beatBytes * 8).W), 0.U)
 
     val burstTotalNumber = RegInit(UInt(8.W), 0.U)
     val burstCurrentNumber = RegInit(UInt(8.W), 0.U)
@@ -543,7 +543,7 @@ class JTAGToMasterAXI4(irLength: Int, initialInstruction: BigInt, beatBytes: Int
     }
 
     when(currentInstruction === "b0010".U) {
-      addressValue := controller.io.dataOut >> (beatBytes * 4)
+      addressValue := controller.io.dataOut // >> (beatBytes * 4)
     }
 
     when(currentInstruction === "b1000".U) {
